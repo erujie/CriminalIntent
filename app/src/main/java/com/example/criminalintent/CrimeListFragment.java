@@ -19,6 +19,7 @@ import java.util.List;
 public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
+    private int mLastUpdatedPosition = -1;
 
     private static final int VIEW_TYPE_NORMAL = 0;
     private static final int VIEW_TYPE_POLICE = 1;
@@ -42,20 +43,39 @@ public class CrimeListFragment extends Fragment {
         updateUI();
     }
 
+/////////////////chapter 10 challenge
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
-        mAdapter = new CrimeAdapter(crimes);
-        mCrimeRecyclerView.setAdapter(mAdapter);
 
         if (mAdapter == null) {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.notifyDataSetChanged();
+            mAdapter.setCrimes(crimes);
+            if (mLastUpdatedPosition >= 0) {
+                mAdapter.notifyItemChanged(mLastUpdatedPosition);
+                mLastUpdatedPosition = -1;
+            } else {
+                mAdapter.notifyDataSetChanged();
+            }
         }
     }
 
+//    private void updateUI() {
+//        CrimeLab crimeLab = CrimeLab.get(getActivity());
+//        List<Crime> crimes = crimeLab.getCrimes();
+//        mAdapter = new CrimeAdapter(crimes);
+//        mCrimeRecyclerView.setAdapter(mAdapter);
+//
+//        if (mAdapter == null) {
+//            mAdapter = new CrimeAdapter(crimes);
+//            mCrimeRecyclerView.setAdapter(mAdapter);
+//        } else {
+//            mAdapter.notifyDataSetChanged();
+//        }
+//    }
+/// //////////////////////////////////
     private class CrimeHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
         private Crime mCrime;
@@ -85,6 +105,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
+            mLastUpdatedPosition = getBindingAdapterPosition();
             Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
@@ -125,18 +146,32 @@ public class CrimeListFragment extends Fragment {
             mDateTextView.setText(formattedDate);
         }
 
+//////////////////chapter 10 challenge
         @Override
         public void onClick(View view) {
-            Toast.makeText(getActivity(),
-                            mCrime.getTitle() + " clicked!", Toast.LENGTH_SHORT)
-                    .show();
+            mLastUpdatedPosition = getBindingAdapterPosition();
+            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+            startActivity(intent);
         }
+
+//        @Override
+//        public void onClick(View view) {
+//            Toast.makeText(getActivity(),
+//                            mCrime.getTitle() + " clicked!", Toast.LENGTH_SHORT)
+//                    .show();
+//        }
+///////////////////////////////////////////////////////////////////////////////////////
+
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private List<Crime> mCrimes;
 
         public CrimeAdapter(List<Crime> crimes) {
+            mCrimes = crimes;
+        }
+
+        public void setCrimes(List<Crime> crimes) {
             mCrimes = crimes;
         }
 
