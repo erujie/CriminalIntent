@@ -21,6 +21,8 @@
         <activity
             android:name=".CrimePagerActivity">
         </activity>
+        <activity android:name=".DatePickerActivity">
+        </activity>
     </application>
 
 </manifest>
