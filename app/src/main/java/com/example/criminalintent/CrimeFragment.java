@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -31,6 +32,7 @@ public class CrimeFragment extends Fragment {
     private Button mDateButton;
     private Button mTimeButton;
     private CheckBox mSolvedCheckBox;
+    private TextView mStatusTextView;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -109,13 +111,17 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        mStatusTextView = (TextView) v.findViewById(R.id.crime_status);
+
         mSolvedCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
+        updateStatus(); // Set initial status
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,
                                          boolean isChecked) {
                 mCrime.setSolved(isChecked);
+                updateStatus(); // Update status when checkbox changes
             }
         });
 
@@ -146,6 +152,15 @@ public class CrimeFragment extends Fragment {
     }
     private void updateTime() {
         mTimeButton.setText(android.text.format.DateFormat.format("h:mm a", mCrime.getDate()));
+    }
+    private void updateStatus() {
+        if (mCrime.isSolved()) {
+            mStatusTextView.setText("Status: Case Closed");
+            mStatusTextView.setTextColor(0xFF808080); // Grey color
+        } else {
+            mStatusTextView.setText("Status: Open");
+            mStatusTextView.setTextColor(0xFFFF0000); // Red color
+        }
     }
 
 

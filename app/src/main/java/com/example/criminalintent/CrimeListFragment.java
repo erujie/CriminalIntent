@@ -101,6 +101,15 @@ public class CrimeListFragment extends Fragment {
             mDateTextView.setText(formattedDate);
 
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
+
+            // Grey out if case is closed (solved)
+            if (crime.isSolved()) {
+                itemView.setBackgroundColor(0xFFE0E0E0); // Light grey
+                itemView.setAlpha(0.7f); // Slightly transparent
+            } else {
+                itemView.setBackgroundColor(0xFFFFFFFF); // White
+                itemView.setAlpha(1.0f); // Fully opaque
+            }
         }
 
         @Override
@@ -144,6 +153,15 @@ public class CrimeListFragment extends Fragment {
             // Format date as "Friday, Jul 22, 2016"
             String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", mCrime.getDate()).toString();
             mDateTextView.setText(formattedDate);
+
+            // Grey out if case is closed (solved)
+            if (crime.isSolved()) {
+                itemView.setBackgroundColor(0xFFD0D0D0); // Darker grey
+                itemView.setAlpha(0.7f);
+            } else {
+                itemView.setBackgroundColor(0xFFFFF3E0); // Original orange tint
+                itemView.setAlpha(1.0f);
+            }
         }
 
 //////////////////chapter 10 challenge
