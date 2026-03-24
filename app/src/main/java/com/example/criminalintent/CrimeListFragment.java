@@ -156,10 +156,10 @@ public class CrimeListFragment extends Fragment {
 
             // Grey out if case is closed (solved)
             if (crime.isSolved()) {
-                itemView.setBackgroundColor(0xFFD0D0D0); // Darker grey
+                itemView.setBackgroundColor(0xFFD0D0D0); //Darker grey
                 itemView.setAlpha(0.7f);
             } else {
-                itemView.setBackgroundColor(0xFFFFF3E0); // Original orange tint
+                itemView.setBackgroundColor(0xFFFFFFFF); //White
                 itemView.setAlpha(1.0f);
             }
         }
@@ -168,7 +168,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View view) {
             mLastUpdatedPosition = getBindingAdapterPosition();
-            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
 
