@@ -185,8 +185,6 @@ public class CrimeListFragment extends Fragment {
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setCrimes(crimes);
-            // Always use notifyDataSetChanged() when returning to the list.
-            // Using notifyItemChanged() after a deletion causes Inconsistency detected crash.
             mAdapter.notifyDataSetChanged();
             mLastUpdatedPosition = -1;
         }
