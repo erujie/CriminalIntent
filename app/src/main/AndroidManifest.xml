@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CrimePagerActivity">
+            android:name=".CrimePagerActivity"
+            android:parentActivityName=".CrimeListActivity">
         </activity>
         <activity android:name=".DatePickerActivity">
         </activity>
