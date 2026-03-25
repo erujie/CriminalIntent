@@ -16,4 +16,5 @@
         <item quantity="other">%1$d crimes</item>
     </plurals>
     <string name="no_crimes_message">There are no crimes.</string>
+    <string name="crime_limit_reached">Crime limit reached (max 5).</string>
 </resources>

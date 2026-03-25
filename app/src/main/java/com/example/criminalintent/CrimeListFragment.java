@@ -93,6 +93,20 @@ public class CrimeListFragment extends Fragment {
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem newCrimeItem = menu.findItem(R.id.new_crime);
+        if (newCrimeItem != null) {
+            boolean canAddMore = CrimeLab.get(getActivity()).getCrimes().size() < 5;
+            // Always keep enabled so it is clickable and can show the limit message Toast
+            newCrimeItem.setEnabled(true);
+            if (newCrimeItem.getIcon() != null) {
+                newCrimeItem.getIcon().setAlpha(canAddMore ? 255 : 128);
+            }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 //        switch (item.getItemId()) {
 //            case R.id.new_crime:
@@ -124,8 +138,14 @@ public class CrimeListFragment extends Fragment {
     }
 
     private void createNewCrime() {
+        CrimeLab crimeLab = CrimeLab.get(getActivity());
+        if (crimeLab.getCrimes().size() >= 5) {
+            Toast.makeText(getActivity(), R.string.crime_limit_reached, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Crime crime = new Crime();
-        CrimeLab.get(getActivity()).addCrime(crime);
+        crimeLab.addCrime(crime);
         Intent intent = CrimePagerActivity
                 .newIntent(getActivity(), crime.getId());
         startActivity(intent);
@@ -165,14 +185,15 @@ public class CrimeListFragment extends Fragment {
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setCrimes(crimes);
-            if (mLastUpdatedPosition >= 0) {
-                mAdapter.notifyItemChanged(mLastUpdatedPosition);
-                mLastUpdatedPosition = -1;
-            } else {
-                mAdapter.notifyDataSetChanged();
-            }
+            // Always use notifyDataSetChanged() when returning to the list.
+            // Using notifyItemChanged() after a deletion causes Inconsistency detected crash.
+            mAdapter.notifyDataSetChanged();
+            mLastUpdatedPosition = -1;
         }
         updateSubtitle();
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
     }
 
 //    private void updateUI() {
@@ -188,7 +209,7 @@ public class CrimeListFragment extends Fragment {
 //            mAdapter.notifyDataSetChanged();
 //        }
 //    }
-/// //////////////////////////////////
+/////////////////////////////////////
     private class CrimeHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
         private Crime mCrime;
@@ -209,19 +230,17 @@ public class CrimeListFragment extends Fragment {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
 
-            // Format date as "Friday, Jul 22, 2016"
             String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", mCrime.getDate()).toString();
             mDateTextView.setText(formattedDate);
 
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
 
-            // Grey out if case is closed (solved)
             if (crime.isSolved()) {
-                itemView.setBackgroundColor(0xFFE0E0E0); // Light grey
-                itemView.setAlpha(0.7f); // Slightly transparent
+                itemView.setBackgroundColor(0xFFE0E0E0);
+                itemView.setAlpha(0.7f);
             } else {
-                itemView.setBackgroundColor(0xFFFFFFFF); // White
-                itemView.setAlpha(1.0f); // Fully opaque
+                itemView.setBackgroundColor(0xFFFFFFFF);
+                itemView.setAlpha(1.0f);
             }
         }
 
@@ -233,7 +252,6 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
-    // ViewHolder for crimes requiring police
     private class CrimePoliceHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
         private Crime mCrime;
@@ -263,16 +281,14 @@ public class CrimeListFragment extends Fragment {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
 
-            // Format date as "Friday, Jul 22, 2016"
             String formattedDate = DateFormat.format("EEEE, MMM dd, yyyy", mCrime.getDate()).toString();
             mDateTextView.setText(formattedDate);
 
-            // Grey out if case is closed (solved)
             if (crime.isSolved()) {
-                itemView.setBackgroundColor(0xFFD0D0D0); //Darker grey
+                itemView.setBackgroundColor(0xFFD0D0D0);
                 itemView.setAlpha(0.7f);
             } else {
-                itemView.setBackgroundColor(0xFFFFFFFF); //White
+                itemView.setBackgroundColor(0xFFFFFFFF);
                 itemView.setAlpha(1.0f);
             }
         }
