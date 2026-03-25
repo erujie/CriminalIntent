@@ -31,6 +31,11 @@ public class CrimeLab {
         mCrimeMap.put(c.getId(), c);
     }
 
+    public void deleteCrime(Crime crime) {
+        mCrimes.remove(crime);
+        mCrimeMap.remove(crime.getId());
+    }
+
     public List<Crime> getCrimes() {
         return mCrimes;
     }

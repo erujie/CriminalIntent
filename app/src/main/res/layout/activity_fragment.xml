@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/violet"
-        app:title="Criminal Intent"
+        app:title="CriminalIntent"
         app:titleTextColor="@android:color/white"
         app:subtitleTextColor="@android:color/white"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>

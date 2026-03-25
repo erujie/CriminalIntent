@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.appbar.MaterialToolbar;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +36,9 @@ public class CrimePagerActivity  extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crime_pager);
+
+        MaterialToolbar toolbar = findViewById(R.id.top_app_bar);
+        setSupportActionBar(toolbar);
 
         UUID crimeId = (UUID) getIntent()
                 .getSerializableExtra(EXTRA_CRIME_ID);

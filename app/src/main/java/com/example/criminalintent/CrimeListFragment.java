@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,8 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
+    private LinearLayout mEmptyView;
+    private Button mAddFirstCrimeButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,15 @@ public class CrimeListFragment extends Fragment {
         mCrimeRecyclerView = (RecyclerView) view
                 .findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
+        mAddFirstCrimeButton = (Button) view.findViewById(R.id.add_first_crime_button);
+        mAddFirstCrimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewCrime();
+            }
+        });
 
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
@@ -99,11 +111,7 @@ public class CrimeListFragment extends Fragment {
 //                return super.onOptionsItemSelected(item);
         int id = item.getItemId();
         if (id == R.id.new_crime) {
-            Crime crime = new Crime();
-            CrimeLab.get(getActivity()).addCrime(crime);
-            Intent intent = CrimePagerActivity
-                    .newIntent(getActivity(), crime.getId());
-            startActivity(intent);
+            createNewCrime();
             return true;
         } else if (id == R.id.show_subtitle) {
             mSubtitleVisible = !mSubtitleVisible;
@@ -115,23 +123,42 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
+    private void createNewCrime() {
+        Crime crime = new Crime();
+        CrimeLab.get(getActivity()).addCrime(crime);
+        Intent intent = CrimePagerActivity
+                .newIntent(getActivity(), crime.getId());
+        startActivity(intent);
+    }
+
     private void updateSubtitle() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         int crimeCount = crimeLab.getCrimes().size();
-        String subtitle = getString(R.string.subtitle_format, crimeCount);
+        String subtitle = getResources()
+                .getQuantityString(R.plurals.subtitle_plural, crimeCount, crimeCount);
 
         if (!mSubtitleVisible) {
             subtitle = null;
         }
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.getSupportActionBar().setSubtitle(subtitle);
+        if (activity != null && activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setSubtitle(subtitle);
+        }
     }
 
 /////////////////chapter 10 challenge
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
+
+        if (crimes.isEmpty()) {
+            mEmptyView.setVisibility(View.VISIBLE);
+            mCrimeRecyclerView.setVisibility(View.GONE);
+        } else {
+            mEmptyView.setVisibility(View.GONE);
+            mCrimeRecyclerView.setVisibility(View.VISIBLE);
+        }
 
         if (mAdapter == null) {
             mAdapter = new CrimeAdapter(crimes);
