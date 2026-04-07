@@ -17,7 +17,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 import java.util.List;
 import java.util.UUID;
 
-public class CrimePagerActivity  extends AppCompatActivity {
+public class CrimePagerActivity  extends AppCompatActivity
+        implements CrimeFragment.Callbacks {
     private static final String EXTRA_CRIME_ID =
             "com.example.criminalintent.crime_id";
 
@@ -109,5 +110,9 @@ public class CrimePagerActivity  extends AppCompatActivity {
 
         mJumpToFirstButton.setEnabled(currentItem != 0);
         mJumpToLastButton.setEnabled(currentItem != mCrimes.size() - 1);
+    }
+
+    @Override
+    public void onCrimeUpdated(Crime crime) {
     }
 }

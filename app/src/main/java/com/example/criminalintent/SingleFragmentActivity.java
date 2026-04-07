@@ -2,6 +2,7 @@ package com.example.criminalintent;
 
 import android.os.Bundle;
 
+import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -11,10 +12,15 @@ import com.google.android.material.appbar.MaterialToolbar;
 public abstract class SingleFragmentActivity extends AppCompatActivity {
     protected abstract Fragment createFragment();
 
+    @LayoutRes
+    protected int getLayoutResId() {
+        return R.layout.activity_fragment;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fragment);
+        setContentView(getLayoutResId());
 
         MaterialToolbar toolbar = findViewById(R.id.top_app_bar);
         setSupportActionBar(toolbar);
