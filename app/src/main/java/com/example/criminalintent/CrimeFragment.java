@@ -386,7 +386,8 @@ public class CrimeFragment extends Fragment {
     }
 
     private void updateDate() {
-        mDateButton.setText(mCrime.getDate().toString());
+        String formattedDate = DateFormat.getMediumDateFormat(getActivity()).format(mCrime.getDate());
+        mDateButton.setText(formattedDate);
     }
 
     private String getCrimeReport() {
@@ -431,7 +432,7 @@ public class CrimeFragment extends Fragment {
     }
 
     private void updateTime() {
-        mTimeButton.setText(android.text.format.DateFormat.format("h:mm a", mCrime.getDate()));
+        mTimeButton.setText(android.text.format.DateFormat.getTimeFormat(getActivity()).format(mCrime.getDate()));
     }
     private void updateStatus() {
         if (mCrime.isSolved()) {
