@@ -69,6 +69,7 @@ public class CrimeFragment extends Fragment {
      */
     public interface Callbacks {
         void onCrimeUpdated(Crime crime);
+        void onCrimeDeleted(Crime crime);
     }
 
     public static CrimeFragment newInstance(UUID crimeId) {
@@ -454,7 +455,7 @@ public class CrimeFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.delete_crime) {
             CrimeLab.get(getActivity()).deleteCrime(mCrime);
-            getActivity().finish();
+            mCallbacks.onCrimeDeleted(mCrime);
             return true;
         } else {
             return super.onOptionsItemSelected(item);

@@ -29,10 +29,27 @@ public class CrimeListActivity extends SingleFragmentActivity
         }
     }
 
+    @Override
     public void onCrimeUpdated(Crime crime) {
         CrimeListFragment listFragment = (CrimeListFragment)
                 getSupportFragmentManager()
                         .findFragmentById(R.id.fragment_container);
         listFragment.updateUI();
+    }
+
+    @Override
+    public void onCrimeDeleted(Crime crime) {
+        if (findViewById(R.id.detail_fragment_container) == null) {
+            finish();
+        } else {
+            Fragment detailFragment = getSupportFragmentManager()
+                    .findFragmentById(R.id.detail_fragment_container);
+            if (detailFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .remove(detailFragment)
+                        .commit();
+            }
+            onCrimeUpdated(crime);
+        }
     }
 }
